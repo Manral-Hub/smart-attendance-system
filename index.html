@@ -1,0 +1,387 @@
+%%writefile templates/index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automatic Classroom Attendance System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .upload-section {
+      margin: 20px 0;
+      padding: 30px;
+      border: 2px dashed #4CAF50;
+      border-radius: 8px;
+      text-align: center;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .btn-upload {
+      background-color: #2196F3;
+    }
+    .btn-upload:hover {
+      background-color: #1976D2;
+    }
+    .btn-clear {
+      background-color: #f44336;
+    }
+    .btn-clear:hover {
+      background-color: #d32f2f;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .preview-section {
+      margin: 20px 0;
+      text-align: center;
+    }
+    #cameraPreview {
+      max-width: 100%;
+      max-height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 10px 0;
+      display: none;
+    }
+    #previewImage {
+      max-width: 100%;
+      max-height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 10px 0;
+      display: none;
+    }
+    .results {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: none;
+    }
+    .results img {
+      max-width: 320px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .present {
+      color: green;
+      font-weight: bold;
+    }
+    .absent {
+      color: red;
+      font-weight: bold;
+    }
+    .nav {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .nav a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+    .error {
+      color: red;
+      padding: 10px;
+      background: #ffe6e6;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Automatic Classroom Attendance System</h1>
+    <p style="text-align: center;">Using Face Recognition</p>
+    
+    <div class="nav">
+      <a href="/">Home</a>
+      <a href="/history">Attendance History</a>
+    </div>
+
+    <div class="upload-section">
+      <h3>Capture or Upload Photo</h3>
+      
+      <div>
+        <button onclick="startCamera()" id="takePhotoBtn">📷 Take Photo</button>
+        <input type="file" id="fileInput" accept="image/*">
+        <button onclick="document.getElementById('fileInput').click()" class="btn-upload">📁 Upload</button>
+        <button onclick="clearPreview()" class="btn-clear">Clear</button>
+      </div>
+      
+      <div class="preview-section">
+        <video id="cameraPreview" autoplay></video>
+        <img id="previewImage" alt="Preview">
+        <canvas id="captureCanvas" style="display: none;"></canvas>
+      </div>
+      
+      <div id="cameraControls" style="display: none;">
+        <button onclick="capturePhoto()">Capture Photo</button>
+        <button onclick="stopCamera()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+      Processing attendance...
+    </div>
+
+    <div id="results" class="results">
+      <h3>Detection Results</h3>
+      <p><strong>Date:</strong> <span id="resultDate"></span></p>
+      <div id="resultImage"></div>
+      <table id="resultTable">
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    let cameraStream = null;
+
+    // Camera functionality
+    function startCamera() {
+      // Prevent multiple camera starts
+      if (cameraStream) {
+        console.log('Camera already active, ignoring request');
+        return;
+      }
+      
+      const takePhotoBtn = document.getElementById('takePhotoBtn');
+      takePhotoBtn.disabled = true;
+      
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(function(stream) {
+          cameraStream = stream;
+          const video = document.getElementById('cameraPreview');
+          video.srcObject = stream;
+          video.style.display = 'block';
+          document.getElementById('previewImage').style.display = 'none';
+          document.getElementById('cameraControls').style.display = 'block';
+          selectedFile = null;
+          // Hide results when starting new capture
+          document.getElementById('results').style.display = 'none';
+          document.getElementById('error').style.display = 'none';
+        })
+        .catch(function(err) {
+          showError('Error accessing camera: ' + err.message);
+          takePhotoBtn.disabled = false;
+        });
+    }
+
+    function stopCamera(clearFile = false) {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      document.getElementById('cameraPreview').style.display = 'none';
+      document.getElementById('cameraControls').style.display = 'none';
+      
+      // Re-enable Take Photo button
+      document.getElementById('takePhotoBtn').disabled = false;
+      
+      if (clearFile) {
+        selectedFile = null;
+      }
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('cameraPreview');
+      const canvas = document.getElementById('captureCanvas');
+      const preview = document.getElementById('previewImage');
+      
+      if (!video || !video.videoWidth) {
+        showError('Video not ready. Please wait a moment and try again.');
+        return;
+      }
+      
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      
+      // Convert canvas to blob
+      canvas.toBlob(function(blob) {
+        if (!blob) {
+          showError('Failed to capture photo. Please try again.');
+          return;
+        }
+        selectedFile = blob;
+        preview.src = canvas.toDataURL('image/jpeg', 0.9);
+        preview.style.display = 'block';
+        stopCamera(false);
+        // Automatically process the image
+        processImage();
+      }, 'image/jpeg', 0.9);
+    }
+
+    // File upload functionality
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        // Stop camera if running and re-enable Take Photo button
+        stopCamera(false);
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('previewImage');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          document.getElementById('cameraPreview').style.display = 'none';
+          // Automatically process the image
+          processImage();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function clearPreview() {
+      stopCamera(true);
+      document.getElementById('fileInput').value = '';
+      document.getElementById('previewImage').style.display = 'none';
+      selectedFile = null;
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function processImage() {
+      if (!selectedFile) {
+        showError('Please capture or upload a photo first');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('image', selectedFile, selectedFile.name || 'photo.jpg');
+      
+      const resultsDiv = document.getElementById('results');
+      const errorDiv = document.getElementById('error');
+      const loadingDiv = document.getElementById('loading');
+      
+      resultsDiv.style.display = 'none';
+      errorDiv.style.display = 'none';
+      loadingDiv.style.display = 'block';
+      
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        loadingDiv.style.display = 'none';
+        
+        if (data.success) {
+          displayResults(data);
+        } else {
+          showError(data.error || 'Unknown error occurred');
+        }
+      })
+      .catch(error => {
+        loadingDiv.style.display = 'none';
+        showError('Error: ' + error.message);
+      });
+    }
+
+    function displayResults(data) {
+      const resultsDiv = document.getElementById('results');
+      const resultDate = document.getElementById('resultDate');
+      const resultImage = document.getElementById('resultImage');
+      const resultTable = document.getElementById('resultTable');
+      
+      resultDate.textContent = data.date;
+      resultImage.innerHTML = '<img src="data:image/jpeg;base64,' + data.image + '" />';
+      
+      // Clear existing rows (except header)
+      while (resultTable.rows.length > 1) {
+        resultTable.deleteRow(1);
+      }
+      
+      // Add attendance rows
+      for (const [name, status] of Object.entries(data.attendance)) {
+        const row = resultTable.insertRow();
+        const nameCell = row.insertCell(0);
+        const statusCell = row.insertCell(1);
+        nameCell.textContent = name;
+        statusCell.textContent = status === 'Present' ? 'Detected' : 'Not Detected';
+        statusCell.className = status === 'Present' ? 'present' : 'absent';
+      }
+      
+      resultsDiv.style.display = 'block';
+      resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

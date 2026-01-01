@@ -1,0 +1,213 @@
+%%writefile templates/history.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance History</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .nav {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .nav a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+    .email-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+    td:first-child {
+      text-align: center;
+    }
+    td:nth-child(2) {
+      text-align: center;
+    }
+    td:nth-child(3) {
+      text-align: left;
+    }
+    .present {
+      color: green;
+      font-weight: bold;
+    }
+    .absent {
+      color: red;
+      font-weight: bold;
+    }
+    .na {
+      color: #999;
+    }
+    .email-results {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px solid #4CAF50;
+      background: #f0f8f0;
+      border-radius: 8px;
+      display: none;
+    }
+    .email-results h4 {
+      margin-top: 0;
+    }
+    .email-results ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .email-results li {
+      margin: 5px 0;
+      padding: 5px;
+      background: white;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Attendance History</h1>
+    <p style="text-align: center;">Complete attendance records for all students</p>
+    
+    <div class="nav">
+      <a href="/">Home</a>
+      <a href="/history">Attendance History</a>
+    </div>
+
+    <div class="email-section">
+      <button onclick="simulateEmails()" id="emailBtn">Simulate Email to Parents (for Today)</button>
+      <div id="emailResults" class="email-results"></div>
+    </div>
+
+    <div id="historyTable"></div>
+  </div>
+
+  <script>
+    // Load history on page load
+    window.onload = function() {
+      loadHistory();
+    };
+
+    function loadHistory() {
+      fetch('/api/history')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            displayHistory(data.history);
+          } else {
+            document.getElementById('historyTable').innerHTML = '<p style="color:red;">Error loading history: ' + data.error + '</p>';
+          }
+        })
+        .catch(error => {
+          document.getElementById('historyTable').innerHTML = '<p style="color:red;">Error: ' + error.message + '</p>';
+        });
+    }
+
+    function displayHistory(html) {
+      document.getElementById('historyTable').innerHTML = html;
+    }
+
+    function simulateEmails() {
+      const btn = document.getElementById('emailBtn');
+      const resultsDiv = document.getElementById('emailResults');
+      
+      btn.disabled = true;
+      btn.textContent = 'Simulating...';
+      resultsDiv.style.display = 'none';
+      
+      fetch('/simulate-emails', {
+        method: 'POST'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          let html = '<h3>📧 Simulated Email Messages</h3>';
+          
+          if (data.absent && data.absent.length > 0) {
+            html += '<h4 style="color:red;">❌ Absent Students (' + data.absent.length + '):</h4><ul>';
+            data.absent.forEach(msg => {
+              html += '<li>' + msg + '</li>';
+            });
+            html += '</ul>';
+          }
+          
+          if (data.present && data.present.length > 0) {
+            html += '<h4 style="color:green;">✅ Present Students (' + data.present.length + '):</h4><ul>';
+            data.present.forEach(msg => {
+              html += '<li>' + msg + '</li>';
+            });
+            html += '</ul>';
+          }
+          
+          resultsDiv.innerHTML = html;
+          resultsDiv.style.display = 'block';
+        } else {
+          resultsDiv.innerHTML = '<p style="color:red;">Error: ' + (data.error || 'Unknown error') + '</p>';
+          resultsDiv.style.display = 'block';
+        }
+        
+        btn.disabled = false;
+        btn.textContent = 'Simulate Email to Parents (for Today)';
+      })
+      .catch(error => {
+        resultsDiv.innerHTML = '<p style="color:red;">Error: ' + error.message + '</p>';
+        resultsDiv.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Simulate Email to Parents (for Today)';
+      });
+    }
+  </script>
+</body>
+</html>
