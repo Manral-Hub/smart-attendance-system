@@ -5,7 +5,7 @@ import subprocess
 import os
 
 # Set ngrok auth token
-ngrok.set_auth_token("37FOkL1k3lJsq66oen7KyCpHjUB_5U9FGAYWFGZE2SCKCxUDP")
+ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN_HERE")
 
 # Kill all existing ngrok tunnels first
 ngrok.kill()
@@ -33,4 +33,5 @@ print("=" * 60)
 print("\nOpen this URL in your browser to access the app.")
 print("Share this URL with judges for the demo.")
 print("\nNote: The URL will be active as long as this cell is running.")
+
 print("=" * 60)
