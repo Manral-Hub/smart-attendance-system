@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic Classroom Attendance System - AI Olympiad 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FF5722;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: var(--primary-color);
+            text-transform: none;
+        }
+        
+        .reveal h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        
+        .reveal .subtitle {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: -20px;
+        }
+        
+        .reveal .emoji {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+        
+        .reveal .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .reveal .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .reveal .feature-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .reveal .problem-box {
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .reveal .solution-box {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .reveal .stats {
+            font-size: 2em;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .reveal ul {
+            font-size: 0.9em;
+        }
+        
+        .reveal li {
+            margin: 15px 0;
+        }
+        
+        .reveal .tech-stack {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .reveal .tech-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .reveal .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .reveal .impact-item {
+            text-align: center;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        
+        .reveal .impact-item .emoji {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .reveal .demo-qr {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: 30px auto;
+            max-width: 400px;
+        }
+        
+        .reveal .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5em;
+            color: #999;
+        }
+        
+        .reveal .comparison-table {
+            font-size: 0.8em;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .reveal .comparison-table th,
+        .reveal .comparison-table td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .reveal .comparison-table th {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .reveal .comparison-table .before {
+            background: #ffebee;
+        }
+        
+        .reveal .comparison-table .after {
+            background: #e8f5e9;
+        }
+        
+        .reveal code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--accent-color);
+        }
+        
+        .reveal .workflow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .reveal .workflow-step {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 0 5px;
+        }
+        
+        .reveal .workflow-arrow {
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+        
+        /* Fix for content overflow */
+        .reveal .slides {
+            height: 100%;
+            overflow: visible;
+        }
+        
+        .reveal .slides section {
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px 40px;
+            box-sizing: border-box;
+        }
+        
+        .reveal .slides section.present {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        /* Adjust spacing for better fit */
+        .reveal h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .reveal h4 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .reveal p {
+            margin: 10px 0;
+        }
+        
+        /* Ensure content fits */
+        .reveal .feature-box,
+        .reveal .problem-box,
+        .reveal .solution-box {
+            padding: 15px;
+            margin: 8px 0;
+        }
+        
+        .reveal .feature-box h4,
+        .reveal .problem-box h4,
+        .reveal .solution-box h4 {
+            margin-top: 0;
+        }
+        
+        /* Reduce spacing for list items on dense slides */
+        .reveal li {
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .reveal ul,
+        .reveal ol {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Title -->
+            <section data-background-gradient="linear-gradient(to bottom, #4CAF50, #2196F3)">
+                <h1 style="color: white;">🎓 Automatic Classroom Attendance System</h1>
+                <p class="subtitle" style="color: white; font-size: 1.2em;">Using AI Face Recognition Technology</p>
+                <br><br>
+                <p style="color: white;">
+                    <strong>Presented by:</strong> Shaurya Singh Manral<br>
+                    <strong>Grade:</strong> 7th<br>
+                    <strong>Event:</strong> TalentSprint AI Olympiad 2026
+                </p>
+            </section>
+
+            <!-- Slide 2: The Problem -->
+            <section>
+                <h2>🎯 The Problem</h2>
+                <div class="problem-box">
+                    <p><strong>Manual attendance is time-consuming and error-prone!</strong></p>
+                </div>
+                <ul>
+                    <li>⏰ Teachers waste <span class="stats">5-10 minutes</span> per class on attendance</li>
+                    <li>❌ Human errors in marking present/absent</li>
+                    <li>📝 Tedious paper-based record keeping</li>
+                    <li>📧 Parents receive updates only after delays</li>
+                    <li>🔄 Difficult to track attendance patterns over time</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3: Our Solution -->
+            <section>
+                <h2>💡 Our Solution</h2>
+                <div class="solution-box">
+                    <h3 style="color: var(--primary-color); margin-top: 0;">AI-Powered Automatic Attendance</h3>
+                    <p><strong>Fast • Accurate • Contactless • Automated</strong></p>
+                </div>
+                
+                <div class="two-columns" style="margin-top: 30px;">
+                    <div>
+                        <h4 style="color: var(--accent-color);">❌ Before (Manual)</h4>
+                        <ul style="font-size: 0.8em;">
+                            <li>🐌 Slow manual process</li>
+                            <li>❌ Prone to human errors</li>
+                            <li>📝 Paper records</li>
+                            <li>⏳ Delayed notifications</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--primary-color);">✅ After (Our System)</h4>
+                        <ul style="font-size: 0.8em;">
+                            <li>⚡ Fast & automated</li>
+                            <li>✅ High accuracy</li>
+                            <li>💻 Digital records</li>
+                            <li>📲 Instant notifications</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: How Face Recognition Works -->
+            <section>
+                <h2>🤖 How Does AI Face Recognition Work?</h2>
+                
+                <div class="workflow">
+                    <div class="workflow-step">
+                        <div class="emoji">📸</div>
+                        <strong>Capture</strong>
+                        <p style="font-size: 0.8em;">Take photo of students</p>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="emoji">🔍</div>
+                        <strong>Detect</strong>
+                        <p style="font-size: 0.8em;">Find faces in image</p>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="emoji">🧮</div>
+                        <strong>Encode</strong>
+                        <p style="font-size: 0.8em;">Convert to numbers</p>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="emoji">✅</div>
+                        <strong>Match</strong>
+                        <p style="font-size: 0.8em;">Compare with database</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; text-align: left;">
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li><strong>Face Detection:</strong> AI finds faces in the photo (like Facebook photo tagging)</li>
+                        <li><strong>Face Encoding:</strong> Converts unique facial features into 128 digit vectors</li>
+                        <li><strong>Face Matching:</strong> Compares encodings to identify the person</li>
+                        <li><strong>Machine Learning:</strong> AI learns patterns from training data</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 5: System Architecture & Technology Stack -->
+            <section>
+                <h2>📐 System Architecture</h2>
+                
+                <!-- Architecture diagram with technologies labeled -->
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 15px; margin: 15px 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <!-- Frontend -->
+                        <div style="background: #e3f2fd; padding: 12px; border-radius: 10px; text-align: center;">
+                            <div class="emoji" style="font-size: 1.8em;">💻</div>
+                            <h4 style="margin: 6px 0 4px 0; font-size: 1em;">Frontend (Browser)</h4>
+                            <p style="font-size: 0.7em; margin: 4px 0; color: #666;">
+                                <strong>Technologies:</strong> HTML5, CSS, JavaScript
+                            </p>
+                            <p style="font-size: 0.65em; margin: 4px 0;">
+                                📸 Camera capture • 📁 File upload • 🎨 User interface
+                            </p>
+                        </div>
+                        
+                        <!-- Backend -->
+                        <div style="background: #f3e5f5; padding: 12px; border-radius: 10px; text-align: center;">
+                            <div class="emoji" style="font-size: 1.8em;">⚙️</div>
+                            <h4 style="margin: 6px 0 4px 0; font-size: 1em;">Backend (Server)</h4>
+                            <p style="font-size: 0.7em; margin: 4px 0; color: #666;">
+                                <strong>Technologies:</strong> Python, Flask
+                            </p>
+                            <p style="font-size: 0.65em; margin: 4px 0;">
+                                🔌 API endpoints • 📤 File handling • 🔀 Request routing
+                            </p>
+                        </div>
+                        
+                        <!-- AI Module -->
+                        <div style="background: #fff3e0; padding: 12px; border-radius: 10px; text-align: center;">
+                            <div class="emoji" style="font-size: 1.8em;">🧠</div>
+                            <h4 style="margin: 6px 0 4px 0; font-size: 1em;">AI Engine</h4>
+                            <p style="font-size: 0.7em; margin: 4px 0; color: #666;">
+                                <strong>Technologies:</strong> face_recognition (dlib)
+                            </p>
+                            <p style="font-size: 0.65em; margin: 4px 0;">
+                                🔍 Face detection • 🧮 Encoding • ✅ Matching
+                            </p>
+                        </div>
+                        
+                        <!-- Database -->
+                        <div style="background: #e8f5e9; padding: 12px; border-radius: 10px; text-align: center;">
+                            <div class="emoji" style="font-size: 1.8em;">💾</div>
+                            <h4 style="margin: 6px 0 4px 0; font-size: 1em;">Database</h4>
+                            <p style="font-size: 0.7em; margin: 4px 0; color: #666;">
+                                <strong>Technologies:</strong> CSV + Pandas
+                            </p>
+                            <p style="font-size: 0.65em; margin: 4px 0;">
+                                👥 Student data • 📊 Attendance records • 📧 Parent emails
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Deployment info -->
+                <div style="text-align: center; background: #e3f2fd; padding: 10px; border-radius: 8px; font-size: 0.75em; margin-bottom: 15px;">
+                    <strong>☁️ Deployment:</strong> Google Colab (cloud backend) + ngrok (public tunnel) = Accessible from anywhere! 🌍
+                </div>
+                
+                <!-- Why these technologies (ADDED) -->
+                <div style="text-align: center; font-size: 0.75em;">
+                    <p style="margin: 5px 0;"><strong>✅ Why these technologies?</strong></p>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 8px;">
+                        <span>• Free and open-source</span>
+                        <span>• Industry-standard tools</span>
+                        <span>• No complex setup required</span>
+                        <span>• Works on any device with a browser</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Key Features -->
+            <section>
+                <h2>⭐ Key Features</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">📸 Live Camera Capture</h4>
+                        <p style="font-size: 0.75em; margin: 0;">Take photo directly from webcam using HTML5 technology</p>
+                    </div>
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">📁 Photo Upload</h4>
+                        <p style="font-size: 0.75em; margin: 0;">Upload pre-captured photos for batch processing</p>
+                    </div>
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">🎯 Automatic Detection</h4>
+                        <p style="font-size: 0.75em; margin: 0;">AI automatically identifies and marks students present</p>
+                    </div>
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">📊 History Tracking</h4>
+                        <p style="font-size: 0.75em; margin: 0;">Complete attendance records with date-wise columns</p>
+                    </div>
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">📧 Email Simulation</h4>
+                        <p style="font-size: 0.75em; margin: 0;">Generate notifications for parents (demo mode)</p>
+                    </div>
+                    <div class="feature-box" style="padding: 12px;">
+                        <h4 style="margin-bottom: 5px; font-size: 1em;">🌐 Web-Based</h4>
+                        <p style="font-size: 0.75em; margin: 0;">Works on any device - PC, tablet, or smartphone</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Live Demo -->
+            <section data-background-color="#4CAF50">
+                <h2 style="color: white;">🎬 Live Demo Time!</h2>
+                <div class="demo-qr">
+                    <h3 style="margin-top: 0;">Try it yourself!</h3>
+                    <div style="width: 300px; height: 300px; margin: 20px auto; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                        <img src="qrcode.png" style="width: 300px; height: 300px;" />
+                    </div>
+                    <p style="font-size: 0.9em; margin-top: 20px;">
+                        <strong>Demo URL:</strong><br>
+                        <code style="font-size: 0.8em;">https://soo-unstunned-phillis.ngrok-free.dev/</code>
+                    </p>
+                    <p style="font-size: 0.8em; color: #666; margin-top: 15px;">
+                        📱 Works on your phone too!
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 9: Results & Accuracy -->
+            <section>
+                <h2>📈 Expected Performance</h2>
+
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <span class="emoji">🎯</span>
+                        <div class="stats">99.38%</div>
+                        <p>Model Benchmark</p>
+                        <small style="color: #666;">LFW dataset</small>
+                    </div>
+                    <div class="impact-item">
+                        <span class="emoji">📊</span>
+                        <div class="stats">90-95%</div>
+                        <p>Expected Real-World</p>
+                        <small style="color: #666;">typical classroom</small>
+                    </div>
+                    <div class="impact-item">
+                        <span class="emoji">⏱️</span>
+                        <div class="stats">Under 1 min</div>
+                        <p>Processing Time</p>
+                        <small style="color: #666;">varies by classroom size, hardware, internet speed, etc. </small>
+                    </div>
+                    <div class="impact-item">
+                        <span class="emoji">🔬</span>
+                        <div class="stats">Next Step</div>
+                        <p>Pilot Testing</p>
+                        <small style="color: #666;">with actual students</small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h4>Based on face_recognition Library Research:</h4>
+                    <ul style="font-size: 0.85em;">
+                        <li>📚 <strong>Published benchmark:</strong> 99.38% on Labeled Faces in the Wild dataset</li>
+                        <li>✅ <strong>Expected in practice:</strong> 90-95% in typical classroom conditions</li>
+                        <li>⚠️ <strong>Known challenges:</strong> Poor lighting, extreme angles, occlusions</li>
+                        <li>🎯 <strong>Next step:</strong> Systematic testing with our student dataset</li>
+                    </ul>
+                    <p style="font-size: 0.75em; color: #666; margin-top: 10px;">
+                        <em>Performance estimates based on dlib ResNet model benchmarks. Actual deployment would include comprehensive testing phase.</em>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 10: Real-World Impact -->
+            <section>
+                <h2>🌍 Real-World Impact</h2>
+                
+                <div class="two-columns" style="gap: 15px;">
+                    <div>
+                        <div class="feature-box" style="padding: 10px; margin: 6px 0;">
+                            <h4 style="margin-bottom: 6px; font-size: 1em;">👨‍🏫 For Teachers</h4>
+                            <ul style="font-size: 0.75em; margin: 0;">
+                                <li style="margin: 5px 0;">Save <strong>5-10 minutes</strong> per class</li>
+                                <li style="margin: 5px 0;">Focus more on teaching</li>
+                                <li style="margin: 5px 0;">Zero paperwork</li>
+                                <li style="margin: 5px 0;">Instant insights on attendance</li>
+                            </ul>
+                        </div>
+                        <div class="feature-box" style="padding: 10px; margin: 6px 0;">
+                            <h4 style="margin-bottom: 6px; font-size: 1em;">👨‍👩‍👧 For Parents</h4>
+                            <ul style="font-size: 0.75em; margin: 0;">
+                                <li style="margin: 5px 0;">Real-time notifications</li>
+                                <li style="margin: 5px 0;">Track attendance patterns</li>
+                                <li style="margin: 5px 0;">Stay informed instantly</li>
+                                <li style="margin: 5px 0;">Better communication</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-box" style="padding: 10px; margin: 6px 0;">
+                            <h4 style="margin-bottom: 6px; font-size: 1em;">🎓 For Students</h4>
+                            <ul style="font-size: 0.75em; margin: 0;">
+                                <li style="margin: 5px 0;">Quick, contactless process</li>
+                                <li style="margin: 5px 0;">More class time</li>
+                                <li style="margin: 5px 0;">Fair and accurate</li>
+                                <li style="margin: 5px 0;">Transparent records</li>
+                            </ul>
+                        </div>
+                        <div class="feature-box" style="padding: 10px; margin: 6px 0;">
+                            <h4 style="margin-bottom: 6px; font-size: 1em;">🏫 For School</h4>
+                            <ul style="font-size: 0.75em; margin: 0;">
+                                <li style="margin: 5px 0;">Automated reporting</li>
+                                <li style="margin: 5px 0;">Data-driven decisions</li>
+                                <li style="margin: 5px 0;">Reduced administrative costs</li>
+                                <li style="margin: 5px 0;">Modern, tech-forward image</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 15px; font-size: 0.85em;">
+                    <span class="highlight">Scaling Impact:</span> In an Indian school with 1200 students across 30 classes:<br>
+                    <strong>Time saved per year: 660+ hours!</strong> That's <strong>82 full working days</strong> for teachers! 🎉
+                </p>
+            </section>
+
+            <!-- Slide 11: Ethical Considerations -->
+            <section>
+                <h2>⚖️ Ethical Considerations</h2>
+                <p style="font-size: 0.85em; margin-bottom: 15px;">
+                    <strong>Responsible AI requires careful consideration of ethics and privacy</strong>
+                </p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="feature-box" style="border-left-color: #2196F3; padding: 12px;">
+                        <h4 style="margin-bottom: 8px;">🔒 Privacy & Security</h4>
+                        <ul style="font-size: 0.75em; margin: 0;">
+                            <li style="margin: 6px 0;">Photos stored securely</li>
+                            <li style="margin: 6px 0;">No sharing with third parties</li>
+                            <li style="margin: 6px 0;">Parental consent obtained</li>
+                            <li style="margin: 6px 0;">Data encryption in transit</li>
+                            <li style="margin: 6px 0;">Right to delete data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-box" style="border-left-color: #FF9800; padding: 12px;">
+                        <h4 style="margin-bottom: 8px;">⚖️ Fairness & Bias</h4>
+                        <ul style="font-size: 0.75em; margin: 0;">
+                            <li style="margin: 6px 0;">Works equally for all students</li>
+                            <li style="margin: 6px 0;">No discrimination based on appearance</li>
+                            <li style="margin: 6px 0;">Tested with diverse photos</li>
+                            <li style="margin: 6px 0;">Manual override available</li>
+                            <li style="margin: 6px 0;">Regular accuracy audits</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-box" style="border-left-color: #9C27B0; padding: 12px;">
+                        <h4 style="margin-bottom: 8px;">📢 Transparency</h4>
+                        <ul style="font-size: 0.75em; margin: 0;">
+                            <li style="margin: 6px 0;">Clear communication to parents</li>
+                            <li style="margin: 6px 0;">Students informed about system</li>
+                            <li style="margin: 6px 0;">How data is used explained</li>
+                            <li style="margin: 6px 0;">Open to questions and concerns</li>
+                            <li style="margin: 6px 0;">Option to opt-out available</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-box" style="border-left-color: #F44336; padding: 12px;">
+                        <h4 style="margin-bottom: 8px;">👨‍🏫 Human Oversight</h4>
+                        <ul style="font-size: 0.75em; margin: 0;">
+                            <li style="margin: 6px 0;">Teacher reviews final attendance</li>
+                            <li style="margin: 6px 0;">AI assists, doesn't replace humans</li>
+                            <li style="margin: 6px 0;">Manual attendance backup</li>
+                            <li style="margin: 6px 0;">Accountability for errors</li>
+                            <li style="margin: 6px 0;">Continuous monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Challenges We Faced -->
+            <section data-visibility="hidden">
+                <h2>🚧 Challenges We Faced (& Solved!)</h2>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th style="width: 30%;">Challenge</th>
+                        <th style="width: 35%;">Problem</th>
+                        <th style="width: 35%;">Our Solution</th>
+                    </tr>
+                    <tr>
+                        <td><strong>💡 Poor Lighting</strong></td>
+                        <td class="before">Recognition accuracy dropped to 60% in dim conditions</td>
+                        <td class="after">Added image preprocessing, recommended good lighting in guidelines</td>
+                    </tr>
+                    <tr>
+                        <td><strong>👥 Multiple Faces</strong></td>
+                        <td class="before">Sometimes detected wrong person or missed faces</td>
+                        <td class="after">Improved matching algorithm, adjusted tolerance parameter to 0.6</td>
+                    </tr>
+                    <tr>
+                        <td><strong>📱 Camera Access</strong></td>
+                        <td class="before">Different browsers had different camera APIs</td>
+                        <td class="after">Used HTML5 getUserMedia() with fallback to file upload</td>
+                    </tr>
+                    <tr>
+                        <td><strong>☁️ Deployment</strong></td>
+                        <td class="before">Needed public URL for demo but no server</td>
+                        <td class="after">Used Google Colab + ngrok for free cloud deployment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>🔄 Data Conflicts</strong></td>
+                        <td class="before">Multiple captures could override "Present" with "Absent"</td>
+                        <td class="after">Smart update logic: never overwrite Present → Absent</td>
+                    </tr>
+                </table>
+                
+                <p style="margin-top: 30px; font-size: 0.9em;">
+                    <strong>Key Learning:</strong> Every problem has a solution - persistence and creative thinking are essential! 💪
+                </p>
+            </section>
+
+            <!-- Slide 13: Future Enhancements -->
+           <!-- Slide 12: Future Enhancements -->
+<section>
+    <h2>🚀 Future Enhancements</h2>
+    <p style="font-size: 0.85em; color: #666; text-align: center; margin-bottom: 25px;">
+        <em>Next steps to make this system production-ready</em>
+    </p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <!-- Enhancement 1 -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #FF5722;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">📧</span>
+                <h4 style="margin: 0; font-size: 1em;">Real Email/SMS Notifications</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Integrate with Twilio/SendGrid to send actual notifications to parents instantly when students are absent.
+            </p>
+        </div>
+        
+        <!-- Enhancement 2 -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #2196F3;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">📊</span>
+                <h4 style="margin: 0; font-size: 1em;">Analytics Dashboard</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Add charts and graphs showing attendance trends, patterns, and insights to help teachers identify at-risk students.
+            </p>
+        </div>
+        
+        <!-- Enhancement 3 -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #4CAF50;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">📱</span>
+                <h4 style="margin: 0; font-size: 1em;">Mobile App for Teachers</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Native Android/iOS app allowing teachers to take attendance directly from their smartphones.
+            </p>
+        </div>
+        
+        <!-- Enhancement 4 -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #9C27B0;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">🏫</span>
+                <h4 style="margin: 0; font-size: 1em;">Multi-Class Support</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Expand to handle multiple classrooms, grades, and sections simultaneously with role-based access control.
+            </p>
+        </div>
+        
+        <!-- Enhancement 5 -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #FF9800;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">🔗</span>
+                <h4 style="margin: 0; font-size: 1em;">School System Integration</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Connect with existing school management systems for seamless data sync and unified reporting.
+            </p>
+        </div>
+        
+        <!-- Enhancement 6 (bonus in second row) -->
+        <div class="feature-box" style="padding: 15px; border-left-color: #00BCD4;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 2em; margin-right: 10px;">📄</span>
+                <h4 style="margin: 0; font-size: 1em;">Export & Reporting</h4>
+            </div>
+            <p style="font-size: 0.75em; margin: 0; color: #666;">
+                Generate PDF and Excel reports for administration, with customizable date ranges and filters.
+            </p>
+        </div>
+    </div>
+</section>
+
+            <!-- Slide 14: What We Learned -->
+            <section data-visibility="hidden" data-background-gradient="linear-gradient(to bottom, #4CAF50, #2196F3)">
+                <h2>📚 What We Learned</h2>
+                
+                <div class="two-columns">
+                    <div>
+                        <h3 style="font-size: 1.2em; color: var(--primary-color);">Technical Skills 💻</h3>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>AI/ML Concepts:</strong> Face recognition, encodings, matching algorithms</li>
+                            <li><strong>Python Programming:</strong> Flask, pandas, file handling</li>
+                            <li><strong>Web Development:</strong> HTML5, CSS, JavaScript, APIs</li>
+                            <li><strong>Cloud Computing:</strong> Google Colab, deployment</li>
+                            <li><strong>Database Management:</strong> CSV operations, data integrity</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.2em; color: var(--secondary-color);">Soft Skills 🌟</h3>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>Problem-solving:</strong> Breaking complex problems into steps</li>
+                            <li><strong>Research:</strong> Reading documentation, finding solutions</li>
+                            <li><strong>Debugging:</strong> Patience and systematic error fixing</li>
+                            <li><strong>User Experience:</strong> Designing for real users</li>
+                            <li><strong>Ethics:</strong> Considering privacy and fairness</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+                    <h3 style="color: white; margin-top: 0;">Most Important Learning 💡</h3>
+                    <p style="font-size: 1.1em; margin: 0;">
+                        <strong>"Technology can solve real-world problems and make people's lives better. 
+                        As future AI developers, we have the responsibility to create ethical, 
+                        fair, and helpful solutions for society."</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 15: Thank You -->
+            <section data-background-gradient="linear-gradient(to bottom, #4CAF50, #2196F3)">
+                <h1 style="color: white;">🙏 Thank You!</h1>
+                <p style="color: white; font-size: 1.2em; margin-top: 30px;">Questions & Discussion</p>
+                
+                <div style="margin-top: 50px; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px;">
+                    <h3 style="margin-top: 0;">📬 Contact & Resources</h3>
+                    <p style="font-size: 0.9em;">
+                        <strong>GitHub Repository:</strong> https://github.com/Manral-Hub/smart-attendance-system<br>
+                        <strong>Email:</strong> shauryasingh.manral@gmail.com<br>
+                        <strong>Live Demo:</strong> https://soo-unstunned-phillis.ngrok-free.dev/
+                    </p>
+                    <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+                        <p style="font-size: 0.8em; margin: 0; color: #666;">
+                            🌟 <strong>Special Thanks:</strong><br>
+                            TalentSprint AI Olympiad organizers<br>
+                            My teachers and mentors<br>
+                            Open-source community for amazing tools
+                        </p>
+                    </div>
+                </div>
+                
+                <p style="color: white; margin-top: 40px; font-size: 0.9em;">
+                    <strong>"The future of education is intelligent, automated, and student-centric!"</strong>
+                </p>
+            </section>
+
+            <!-- Bonus Slide: Technical Architecture (if asked) -->
+            <section data-visibility="hidden">
+                <h2>💻 Technical Details (Bonus)</h2>
+                <p style="font-size: 0.8em;">For those interested in the code...</p>
+                
+                <div style="text-align: left; font-size: 0.7em;">
+                    <div class="feature-box">
+                        <h4>Face Recognition Algorithm</h4>
+                        <ul>
+                            <li>Uses dlib's HOG (Histogram of Oriented Gradients) for face detection</li>
+                            <li>ResNet-based deep learning model for face encoding (128-dimensional vectors)</li>
+                            <li>Euclidean distance calculation for matching (threshold: 0.6)</li>
+                            <li>Processing time: ~1-2 seconds per image on Colab</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-box">
+                        <h4>Key Code Components</h4>
+                        <ul>
+                            <li><code>load_known_faces()</code> - Loads and encodes student photos from CSV</li>
+                            <li><code>run_attendance()</code> - Processes test image and identifies students</li>
+                            <li><code>update_attendance_csv()</code> - Updates database with smart logic</li>
+                            <li><code>/upload</code> API endpoint - Handles image upload and processing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-box">
+                        <h4>Data Flow</h4>
+                        <ol>
+                            <li>User captures/uploads image → Browser sends to Flask server</li>
+                            <li>Flask saves temporarily with UUID-based filename</li>
+                            <li>Face recognition module processes image</li>
+                            <li>Results returned as JSON with base64-encoded image</li>
+                            <li>CSV database updated with new attendance data</li>
+                            <li>Frontend displays results with color-coded status</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            width: 1280,
+            height: 900,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: false,
+            touch: true,
+            loop: false,
+            keyboard: true,
+            overview: true,
+            help: true
+        });
+    </script>
+</body>
+</html>
+
