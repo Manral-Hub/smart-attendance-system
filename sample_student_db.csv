@@ -1,0 +1,4 @@
+StudentID,Name,PhotoFilename,ParentEmail,25-12-2025,26-12-2025,27-12-2025,28-12-2025,29-12-2025,30-12-2025
+1,Modi,student1.jpg,parent.modi@gmail.com,,Present,Present,Present,Absent,Absent
+2,Trump,student2.jpg,parent.trump@hotmail.com,,Absent,Absent,Absent,Present,Absent
+3,Jinping,student3.jpg,parent.jinping@gmail.com,,Absent,Absent,Absent,Present,Present
