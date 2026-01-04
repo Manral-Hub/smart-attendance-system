@@ -2,9 +2,9 @@
 
 ## Project Report - TalentSprint AI Olympiad 2026
 
-**Student Name:** [Your Name]  
+**Student Name:** Shaurya Singh Manral  
 **Grade:** 7th  
-**School:** [Your School Name]  
+**School:** Samashti International School  
 **Date:** January 2026  
 **Project Type:** Artificial Intelligence Application
 
@@ -1782,12 +1782,12 @@ project_root/
 ### Appendix J: Contact Information
 
 **For Questions or Collaborations:**
-- **Email:** [Your Email]
-- **GitHub:** [Your GitHub Profile]
-- **Project Repository:** [Your GitHub Repo URL]
-- **School:** [Your School Name]
+- **Email:** shauryasingh.manral@gmail.com
+- **GitHub:** Manral-Hub
+- **Project Repository:** https://github.com/Manral-Hub/smart-attendance-system
+- **School:** Samashti International School, Hyderabad
 
-**Project Mentor/Guide:** [If applicable]
+**Project Mentor/Guide:** TalentSprint team
 
 ---
 
@@ -1799,7 +1799,7 @@ project_root/
 
 **Date:** January 2026
 
-**Author:** [Your Name]
+**Author:** Shaurya Singh Manral
 
 **Grade:** 7th
 
@@ -1821,9 +1821,9 @@ project_root/
 
 I hereby declare that this project report is my own work and that all sources of information have been properly acknowledged. The project was completed as part of my participation in the TalentSprint AI Olympiad 2026.
 
-**Signature:** ___________________
+**Signature:** Shaurya Singh Manral
 
-**Date:** ___________________
+**Date:** 04-01-2026
 
 ---
 

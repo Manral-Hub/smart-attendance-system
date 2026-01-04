@@ -436,7 +436,7 @@ This project was created for educational purposes as part of the TalentSprint AI
 ## Contact
 
 For questions or issues during the demo, contact:  
-[shauryasingh.manral@gmail.com]
+shauryasingh.manral@gmail.com
 
 ---
 
